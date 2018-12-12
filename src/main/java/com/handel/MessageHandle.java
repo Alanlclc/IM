@@ -17,7 +17,7 @@ import io.netty.channel.ChannelHandler.Sharable;
 /**
 <code>MessageHandle.java</code>
 <p>
-	TODO: something to do by the file
+	TODO: 普通文字消息处理类
 </p>
 <p>
 	@company Amigo

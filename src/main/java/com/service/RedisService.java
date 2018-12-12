@@ -1,5 +1,8 @@
 
 package com.service;
+
+import com.pojo.MessageProto.Message;
+
 /**
 <code>RedisService.java</code>
 <p>
@@ -15,9 +18,10 @@ package com.service;
 */
 public interface RedisService {
 
+	boolean checkLogin(Integer userId);
 	
-	
-	
-	
+	void removeLogin(Integer userId);
+
+	void pushOneToOneMeg(Integer userId, Integer targetId, Message oneToOneMsg);
 }
 

@@ -30,5 +30,18 @@ public class MessageUtil {
 		return message;
 	}
 	
+	public static MessageProto.Message getOneToOneMsg(Integer id,Integer targetId,String msg) {
+		MessageProto.Message.Builder builder = MessageProto.Message.newBuilder();
+		builder.setTypeValue(1);
+		builder.setTargetId(1);
+		builder.setId(id);
+		builder.setTargetId(targetId);
+		builder.setMes(msg);
+		builder.setSendTime(String.valueOf(System.currentTimeMillis()/1000));
+		MessageProto.Message message = builder.build();
+		return message;
+	}
+	
+	
 }
 
