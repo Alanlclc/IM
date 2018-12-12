@@ -1,0 +1,20 @@
+netty:
+  port: 8081
+  max-thread: 1024
+  max-frame-length: 65535
+  
+spring:
+  application:
+    name: netty-server
+  redis:
+    host: 47.101.136.129
+    password: amigo123
+    port: 6379
+    timeout: 5000
+    database: 1
+    jedis:
+      pool:
+        max-active: 1000
+        min-idle: 50       
+        max-idle: 100
+        max-wait: 10000  
