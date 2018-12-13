@@ -1,6 +1,8 @@
 
 package com.handel;
 
+import java.net.InetSocketAddress;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +11,12 @@ import org.springframework.stereotype.Component;
 import com.dispatcher.Handle;
 import com.pojo.MessageProto;
 import com.pojo.MessageProto.Message;
+import com.pojo.MessageProto.Message.Type;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.channel.ChannelHandler.Sharable;
 
 /**
@@ -29,29 +34,65 @@ import io.netty.channel.ChannelHandler.Sharable;
 */
 @Sharable
 @Component
-public class MessageHandle extends ChannelInboundHandlerAdapter{
+public class MessageHandle extends SimpleChannelInboundHandler<Message>{
 	
 	private static Logger logger = LoggerFactory.getLogger(MessageHandle.class);
 	
 	@Autowired
 	private Handle heartDispatcher;
 
-
+	@Autowired
+	private Handle messageDispatcher;
+	
 	@Override
-	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-		if(msg instanceof MessageProto.Message) {
-			MessageProto.Message message = (Message) msg;
-			if(message.getType().equals(MessageProto.Message.Type.HEARTBEAT)) {
-				heartDispatcher.receiveHandle(ctx, message);
-			}else {
-				ctx.fireChannelRead(msg);
-			}
-		}else {
-			logger.info("don't know message");
-			throw new Exception("don't know message");
-		}
+	public void channelActive(ChannelHandlerContext ctx) throws Exception {
+		InetSocketAddress insocket = (InetSocketAddress) ctx.channel().remoteAddress();
+		logger.info("{}:连接到服务器",insocket.getAddress());
+	}
+	
+	
+	@Override
+	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+		logger.info("移出断开连接的channel");
 	}
 
+
+
+	//接收消息并分发
+	@Override
+	protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
+		Type type = msg.getType();
+		switch (type) {
+		case MESSAGE:
+			messageDispatcher.receiveHandle(ctx, msg);
+			break;
+		case HEARTBEAT:
+			heartDispatcher.receiveHandle(ctx, msg);
+			break;
+		default:
+			break;
+		}
+	}
+	
+	
+	//netty自带的默认实现 心跳发送 
+	@Override
+	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+		if(evt instanceof IdleStateEvent) {
+			IdleStateEvent event = (IdleStateEvent) evt;
+			switch (event.state()) {
+			case ALL_IDLE:
+				//发送心跳包
+				logger.info("send heartbeat");
+				heartDispatcher.sendHandle(ctx);
+			default:
+				break;
+			}
+		}
+	}
+	
+	
+	
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		cause.printStackTrace();

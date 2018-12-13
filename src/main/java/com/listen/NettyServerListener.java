@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.config.NettyConfig;
-import com.handel.HeartBeatHandle;
 import com.handel.MessageHandle;
 import com.pojo.MessageProto;
 
@@ -67,12 +66,7 @@ public class NettyServerListener{
     @Autowired
     private NettyConfig nettyConfig;
     /**
-	 * 心跳消息处理handle
-     */
-    @Autowired
-    private HeartBeatHandle heartHandle;
-    /**
-	 * 业务消息处理handle
+	 * 消息处理handle
      */
     @Autowired
     private MessageHandle messageHandle;
@@ -94,20 +88,18 @@ public class NettyServerListener{
 			serverBootstrap.group(boss,work)
 				.channel(NioServerSocketChannel.class)
 				.option(ChannelOption.SO_BACKLOG, 100)     //并发下链路层等待队列最大长度
-				.option(ChannelOption.SO_KEEPALIVE, false) //心跳应用层实现
 				.localAddress(new InetSocketAddress(nettyConfig.getPort()))
 				//日志处理handle
 				.childHandler(new ChannelInitializer<Channel>() {
 					@Override
 					protected void initChannel(Channel ch) throws Exception {
 						ChannelPipeline pipeline = ch.pipeline();
-						pipeline.addFirst(new LoggingHandler(LogLevel.INFO));
-						pipeline.addLast(new ProtobufVarint32FrameDecoder());
+						pipeline.addFirst("logger",new LoggingHandler(LogLevel.INFO));
+						pipeline.addLast("removeheader",new ProtobufVarint32FrameDecoder());
 						pipeline.addLast("decode", new ProtobufDecoder(MessageProto.Message.getDefaultInstance()));
 						pipeline.addLast("heartBeat",new IdleStateHandler(25, 25, 10, TimeUnit.SECONDS));
-						pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
+						pipeline.addLast("addheader",new ProtobufVarint32LengthFieldPrepender());
 						pipeline.addLast("encode", new ProtobufEncoder());
-						pipeline.addLast("heartHandel", heartHandle);
 						pipeline.addLast("messageHandel", messageHandle);
 					}
 				});
