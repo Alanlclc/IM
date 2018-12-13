@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.config.NettyConfig;
 import com.handel.HeartBeatHandle;
+import com.handel.MessageHandle;
 import com.pojo.MessageProto;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -66,11 +67,15 @@ public class NettyServerListener{
     @Autowired
     private NettyConfig nettyConfig;
     /**
-	 * 消息处理handle
+	 * 心跳消息处理handle
      */
     @Autowired
-    private HeartBeatHandle handle;
-	
+    private HeartBeatHandle heartHandle;
+    /**
+	 * 业务消息处理handle
+     */
+    @Autowired
+    private MessageHandle messageHandle;
     /**
 	 * 关闭服务器方法
      */
@@ -102,7 +107,8 @@ public class NettyServerListener{
 						pipeline.addLast("decode", new ProtobufDecoder(MessageProto.Message.getDefaultInstance()));
 						pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
 						pipeline.addLast("encode", new ProtobufEncoder());
-						pipeline.addLast("messageHandel", handle);
+						pipeline.addLast("heartHandel", heartHandle);
+						pipeline.addLast("messageHandel", messageHandle);
 					}
 				});
 			logger.info("server start port : {}", nettyConfig.getPort());

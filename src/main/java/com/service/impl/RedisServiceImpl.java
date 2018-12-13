@@ -1,11 +1,16 @@
 
 package com.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
+import com.config.RedisKey;
 import com.pojo.MessageProto.Message;
 import com.service.RedisService;
 import com.utils.Auth;
@@ -13,7 +18,7 @@ import com.utils.Auth;
 /**
 <code>RedisServiceImpl.java</code>
 <p>
-	TODO: something to do by the file
+	TODO: redis实现类
 </p>
 <p>
 	@company Amigo
@@ -25,8 +30,8 @@ import com.utils.Auth;
 */
 
 @Service
+@SuppressWarnings("unchecked")
 public class RedisServiceImpl implements RedisService{
-	
 	
 	@Autowired
 	private ValueOperations<String, Object> valueOperations;
@@ -42,26 +47,59 @@ public class RedisServiceImpl implements RedisService{
 
 	@Override
 	public void cancelOnline(Integer userId) {
-		
+		List<Integer> onlineList = (List<Integer>) valueOperations.get(RedisKey.LOGIN.VALUE);
+		if(onlineList != null && onlineList.contains(userId)) {
+			onlineList.remove(userId);
+			valueOperations.set(RedisKey.LOGIN.VALUE, onlineList);
+		}
+		return;
 	}
 
 	@Override
 	public void pushOneToOneMeg(Integer userId, Integer targetId, Message oneToOneMsg) {
-		// TODO Auto-generated method stub
-		
+		//判断对方是否在线
+		//在线  直接推给对方    
+		//不在线   在redis存起来
+		if(checkOnline(targetId)) {
+			
+		}else {
+			listOperations.leftPush(RedisKey.SESSION.VALUE, oneToOneMsg);
+		}
 	}
 
 	@Override
 	public void online(Integer userId) {
-		// TODO Auto-generated method stub
-		
+		List<Integer> onlineList = (List<Integer>) valueOperations.get(RedisKey.LOGIN.VALUE);
+		if(onlineList != null) {
+			onlineList.add(userId);
+		}else {
+			onlineList = new ArrayList<>();
+			onlineList.add(userId);
+		}
+		valueOperations.set(RedisKey.LOGIN.VALUE, onlineList);
 	}
 
 	@Override
 	public boolean checkOnline(Integer userId) {
-		// TODO Auto-generated method stub
+		List<Integer> onlineList = (List<Integer>) valueOperations.get(RedisKey.LOGIN.VALUE);
+		if(onlineList != null && onlineList.contains(userId)) {
+			return true;
+		}
 		return false;
 	}
+
+	@Override
+	public List<Message> getAllMessage(Integer userId) {
+		List<Object> list = listOperations.range(RedisKey.SESSION.VALUE, 0, -1);
+		List<Message> collect = list.stream()
+									.filter(e->e instanceof Message)
+									.map(e->(Message)e)
+									.collect(Collectors.toList());
+		return collect;
+	}
+
+
+
 
 }
 

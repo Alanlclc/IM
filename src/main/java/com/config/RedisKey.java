@@ -15,8 +15,23 @@ package com.config;
 */
 public enum RedisKey {
 
-
+	/**
+	 *在线列表key
+	 */
+	LOGIN("I:L"),
+	
+	/**
+	 * 
+	 */
+	SESSION("I:S");
 	
 	
+	public final String VALUE;
+	
+	private RedisKey(String VALUE) {
+		this.VALUE = VALUE;
+    }
 }
+
+
 

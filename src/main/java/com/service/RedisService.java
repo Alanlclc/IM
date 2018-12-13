@@ -1,12 +1,14 @@
 
 package com.service;
 
+import java.util.List;
+
 import com.pojo.MessageProto.Message;
 
 /**
 <code>RedisService.java</code>
 <p>
-	TODO: something to do by the file
+	TODO: redis服务接口
 </p>
 <p>
 	@company Amigo
@@ -27,5 +29,7 @@ public interface RedisService {
 	void online(Integer userId);
 
 	void pushOneToOneMeg(Integer userId, Integer targetId, Message oneToOneMsg);
+	
+	List<Message> getAllMessage(Integer userId);
 }
 
