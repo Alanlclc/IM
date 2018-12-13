@@ -2,7 +2,7 @@
 IM Server by Netty 4.0
 ## 消息体采用protobuf
 
-(''')
+
 	syntax = "proto3";
 	option java_package="com.pojo";
 	option java_outer_classname="MessageProto";
@@ -28,7 +28,7 @@ IM Server by Netty 4.0
 	    string mes = 5;
 	    string sendTime = 6;
 	}
-(''')
+
 
 
 
