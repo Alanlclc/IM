@@ -18,9 +18,13 @@ import com.pojo.MessageProto.Message;
 */
 public interface RedisService {
 
-	boolean checkLogin(Integer userId);
+	boolean checkLogin(String username,String password);
 	
-	void removeLogin(Integer userId);
+	boolean checkOnline(Integer userId);
+	
+	void cancelOnline(Integer userId);
+	
+	void online(Integer userId);
 
 	void pushOneToOneMeg(Integer userId, Integer targetId, Message oneToOneMsg);
 }

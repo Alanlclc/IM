@@ -40,8 +40,8 @@ public class MessageDispatcher implements Handle {
 	public void receiveHandle(ChannelHandlerContext ctx, MessageProto.Message message) {
 		//收到客户端消息
 		Integer userId = message.getId();
-		if(service.checkLogin(userId)) {
-			//检测到未登录直接退出
+		if(service.checkOnline(userId)) {
+			//检测到不在线直接退出
 			ctx.close();
 		}
 		Integer targetId = message.getTargetId();
@@ -50,6 +50,7 @@ public class MessageDispatcher implements Handle {
 			//一对一消息
 			Message oneToOneMsg = MessageUtil.getOneToOneMsg(userId, targetId, message.getMes());
 			service.pushOneToOneMeg(userId, targetId ,oneToOneMsg);
+			//写入响应流
 			ctx.writeAndFlush(oneToOneMsg);
 			break;
 		case 1:
@@ -57,7 +58,6 @@ public class MessageDispatcher implements Handle {
 			
 			break;
 		}
-		
 	}
 
 }

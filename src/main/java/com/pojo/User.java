@@ -3,7 +3,7 @@ package com.pojo;
 /**
 <code>User.java</code>
 <p>
-	TODO: something to do by the file
+	TODO: 用户实体
 </p>
 <p>
 	@company Amigo
