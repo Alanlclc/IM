@@ -50,6 +50,7 @@ public class HeartBeatHandle extends ChannelInboundHandlerAdapter{
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		if(msg instanceof MessageProto.Message) {
+			logger.info("receive heartbeat");
 			MessageProto.Message message = (Message) msg;
 			if(message.getType().equals(MessageProto.Message.Type.HEARTBEAT)) {
 				heartDispatcher.receiveHandle(ctx, message);
@@ -78,7 +79,6 @@ public class HeartBeatHandle extends ChannelInboundHandlerAdapter{
 				break;
 			case ALL_IDLE:
 				//未进行读写操作
-				logger.info("ALL_IDLE");
 				//发送心跳包
 				heartDispatcher.sendHandle(ctx);
 				break;

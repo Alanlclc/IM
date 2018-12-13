@@ -97,14 +97,14 @@ public class NettyServerListener{
 				.option(ChannelOption.SO_KEEPALIVE, false) //心跳应用层实现
 				.localAddress(new InetSocketAddress(nettyConfig.getPort()))
 				//日志处理handle
-				.handler(new LoggingHandler(LogLevel.INFO))
 				.childHandler(new ChannelInitializer<Channel>() {
 					@Override
 					protected void initChannel(Channel ch) throws Exception {
 						ChannelPipeline pipeline = ch.pipeline();
-						pipeline.addLast("heartBeat",new IdleStateHandler(25, 15, 10, TimeUnit.SECONDS));
+						pipeline.addFirst(new LoggingHandler(LogLevel.INFO));
 						pipeline.addLast(new ProtobufVarint32FrameDecoder());
 						pipeline.addLast("decode", new ProtobufDecoder(MessageProto.Message.getDefaultInstance()));
+						pipeline.addLast("heartBeat",new IdleStateHandler(25, 25, 10, TimeUnit.SECONDS));
 						pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
 						pipeline.addLast("encode", new ProtobufEncoder());
 						pipeline.addLast("heartHandel", heartHandle);
