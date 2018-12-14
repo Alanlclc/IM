@@ -11,14 +11,14 @@ IM Server by Netty 4.0
 	{
 		enum Type //枚举请求消息类型
 		{ 
-			HEARTBEAT = 0; 
+		HEARTBEAT = 0; 
 	        MESSAGE = 1;
 	        IMAGE = 2;
 	        VIDEO = 3;
 		}
 		enum Target //枚举消息接收者目标类型
 		{ 
-			USER = 0; 
+		USER = 0; 
 	        GROUP = 1;
 		}
 		Type type = 1;
