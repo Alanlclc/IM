@@ -43,5 +43,16 @@ public class MessageUtil {
 	}
 	
 	
+	public static MessageProto.Message loginMsg(Integer id,String username,String password){
+		MessageProto.Message.Builder builder = MessageProto.Message.newBuilder();
+		builder.setTypeValue(2);
+		builder.setTargetId(0);
+		builder.setId(id);
+		builder.setMes(username + "_" + password);
+		builder.setSendTime(String.valueOf(System.currentTimeMillis()/1000));
+		MessageProto.Message message = builder.build();
+		return message;
+	}
+	
 }
 

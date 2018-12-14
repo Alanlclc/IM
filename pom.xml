@@ -69,6 +69,14 @@
                 <fork>true</fork>
             </configuration>
         </plugin>
+       	<plugin>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-maven-plugin</artifactId>
+			<configuration>
+				<finalName>${project.name}</finalName>
+				<outputDirectory>/Users/IMserver/dist</outputDirectory>
+			</configuration>
+		</plugin>
     </plugins>
   </build>
 </project>

@@ -82,7 +82,7 @@ public class Client {
 
 		@Override
 		public void channelActive(ChannelHandlerContext ctx) throws Exception {
-			Message message = MessageUtil.getHeartBeatMsg(1, 2);
+			Message message = MessageUtil.loginMsg(1, "test1", "123456");
 			ctx.writeAndFlush(message);
 		}
 		

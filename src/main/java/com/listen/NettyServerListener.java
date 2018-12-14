@@ -97,7 +97,7 @@ public class NettyServerListener{
 						pipeline.addFirst("logger",new LoggingHandler(LogLevel.INFO));
 						pipeline.addLast("removeheader",new ProtobufVarint32FrameDecoder());
 						pipeline.addLast("decode", new ProtobufDecoder(MessageProto.Message.getDefaultInstance()));
-						pipeline.addLast("heartBeat",new IdleStateHandler(25, 25, 10, TimeUnit.SECONDS));
+						pipeline.addLast("heartBeat",new IdleStateHandler(0, 0, 10, TimeUnit.SECONDS));
 						pipeline.addLast("addheader",new ProtobufVarint32LengthFieldPrepender());
 						pipeline.addLast("encode", new ProtobufEncoder());
 						pipeline.addLast("messageHandel", messageHandle);

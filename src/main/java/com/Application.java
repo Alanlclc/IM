@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
 <code>Application.java</code>
 <p>
-	TODO: something to do by the file
+	TODO: 启动类
 </p>
 <p>
 	@company Amigo

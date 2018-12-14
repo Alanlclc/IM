@@ -6,6 +6,7 @@ import java.net.InetSocketAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.dispatcher.Handle;
@@ -44,6 +45,9 @@ public class MessageHandle extends SimpleChannelInboundHandler<Message>{
 	@Autowired
 	private Handle messageDispatcher;
 	
+	@Autowired
+	private	Handle loginDispatcher;
+	
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		InetSocketAddress insocket = (InetSocketAddress) ctx.channel().remoteAddress();
@@ -69,6 +73,9 @@ public class MessageHandle extends SimpleChannelInboundHandler<Message>{
 		case HEARTBEAT:
 			heartDispatcher.receiveHandle(ctx, msg);
 			break;
+		case IMAGE:
+			loginDispatcher.receiveHandle(ctx, msg);
+			break;
 		default:
 			break;
 		}
@@ -83,7 +90,6 @@ public class MessageHandle extends SimpleChannelInboundHandler<Message>{
 			switch (event.state()) {
 			case ALL_IDLE:
 				//发送心跳包
-				logger.info("send heartbeat");
 				heartDispatcher.sendHandle(ctx);
 			default:
 				break;

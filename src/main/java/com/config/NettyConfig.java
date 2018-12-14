@@ -1,8 +1,13 @@
 
 package com.config;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import io.netty.channel.ChannelHandlerContext;
 
 /**
 <code>NettyConfig.java</code>
@@ -29,6 +34,10 @@ public class NettyConfig {
 	@Value("${netty.max-frame-length}")
 	private Integer maxFrameLength; //数据包最大长度
 
+	//初始化一个存储连接状态的线程安全的map
+	public static Map<Long, ChannelHandlerContext> map = new ConcurrentHashMap<>();
+	
+	
 	public Integer getPort() {
 		return port;
 	}
