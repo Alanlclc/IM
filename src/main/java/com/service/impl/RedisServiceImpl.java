@@ -12,13 +12,14 @@ import org.springframework.stereotype.Service;
 
 import com.config.RedisKey;
 import com.pojo.MessageProto.Message;
+import com.service.MessageService;
 import com.service.RedisService;
 import com.utils.Auth;
 
 /**
 <code>RedisServiceImpl.java</code>
 <p>
-	TODO: redis实现类
+	TODO: redis服务
 </p>
 <p>
 	@company Amigo
@@ -40,8 +41,9 @@ public class RedisServiceImpl implements RedisService{
 	private ListOperations<String, Object> listOperations;
 	
 	
+	
 	@Override
-	public boolean checkLogin(String username,String password) {
+	public Integer checkLogin(String username,String password) {
 		return Auth.loginAuth(username, password);
 	}
 

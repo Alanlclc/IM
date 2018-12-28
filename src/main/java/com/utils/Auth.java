@@ -1,6 +1,7 @@
 
 package com.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,12 +34,13 @@ public class Auth {
 		map.put("test6", new User(6, "test6", "123456"));
 	}
 	
-	public static boolean loginAuth(String username,String password) {
+	public static Integer loginAuth(String username,String password) {
 		if(map.get(username) !=null && map.get(username).getPassword().equals(password)) {
-			return true;
+			return map.get(username).getId();
 		}
-		return false;
+		return 0;
 	}
+	
 	
 }
 

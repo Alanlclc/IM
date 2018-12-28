@@ -8,7 +8,7 @@ spring:
     name: netty-server
   redis:
     host: 47.101.136.129
-    password: amigo123
+    password:  liu961227
     port: 6379
     timeout: 5000
     database: 1

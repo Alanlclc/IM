@@ -20,7 +20,7 @@ import com.pojo.MessageProto.Message;
 */
 public interface RedisService {
 
-	boolean checkLogin(String username,String password);
+	Integer checkLogin(String username,String password);
 	
 	boolean checkOnline(Integer userId);
 	

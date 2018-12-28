@@ -85,8 +85,6 @@ public class Client {
 			Message message = MessageUtil.loginMsg(1, "test1", "123456");
 			ctx.writeAndFlush(message);
 		}
-		
-		
 	}
 	
 	

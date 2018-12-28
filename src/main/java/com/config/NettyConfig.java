@@ -35,7 +35,7 @@ public class NettyConfig {
 	private Integer maxFrameLength; //数据包最大长度
 
 	//初始化一个存储连接状态的线程安全的map
-	public static Map<Long, ChannelHandlerContext> map = new ConcurrentHashMap<>();
+	public static volatile Map<Long, ChannelHandlerContext> map = new ConcurrentHashMap<>();
 	
 	
 	public Integer getPort() {

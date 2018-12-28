@@ -51,7 +51,7 @@ public class MessageDispatcher implements Handle {
 			Message oneToOneMsg = MessageUtil.getOneToOneMsg(userId, targetId, message.getMes());
 			service.pushOneToOneMeg(userId, targetId ,oneToOneMsg);
 			//写入响应流
-			ctx.writeAndFlush(oneToOneMsg);
+//			ctx.writeAndFlush(oneToOneMsg);
 			break;
 		case 1:
 			//群发消息
