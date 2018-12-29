@@ -3,11 +3,15 @@ package com.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pojo.MessageProto.Message;
 import com.service.MessageService;
+import com.service.RedisService;
 
 import io.netty.channel.Channel;
 
@@ -27,6 +31,10 @@ import io.netty.channel.Channel;
 @Service
 public class MessageServiceImpl implements MessageService{
 	
+	
+	@Autowired
+	private RedisService redisService;
+	
 	@Override
 	public void putChannel(Integer userId,Channel channel) {
 		map.put(userId, channel);
@@ -38,15 +46,30 @@ public class MessageServiceImpl implements MessageService{
 	}
 
 	@Override
-	public void sendOneToOneMsg() {
-		
-		
+	public void pushOneToOneMeg(Message message) {
+		Integer targetId = message.getTargetId();
+		if(checkOnline(targetId)) {
+			Channel channel = map.get(targetId);
+			channel.alloc();
+			channel.writeAndFlush(message);
+		}else {
+			
+		}
 	}
 
 	@Override
-	public void sendOneToManyMsg() {
-		
-		
+	public void pushOneToManyMsg(Message message) {
+		Integer groupId = message.getTargetId();
+		List<Integer> groups = redisService.getGroupMemberId(groupId);
+		for (Integer targetId : groups) {
+			if(checkOnline(targetId)) {
+				Channel channel = map.get(targetId);
+				channel.alloc();
+				channel.writeAndFlush(message);
+			}else {
+				
+			}
+		}
 	}
 
 	@Override
@@ -61,10 +84,25 @@ public class MessageServiceImpl implements MessageService{
 			result = list.stream().map(e->map.get(e)).collect(Collectors.toList());
 		}
 		return result;
+	}
+
+	@Override
+	public boolean checkOnline(Integer userId) {
+		Set<Integer> keySet = map.keySet();
+		if(keySet.size()>0 && keySet.contains(userId)) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void pushMessageOutLine(Integer userId) {
+		
+		
+		
+		
+		
 	};
-	
-	
-	
 	
 }
 

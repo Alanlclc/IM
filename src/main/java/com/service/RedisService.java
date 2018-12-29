@@ -27,9 +27,9 @@ public interface RedisService {
 	void cancelOnline(Integer userId);
 	
 	void online(Integer userId);
-
-	void pushOneToOneMeg(Integer userId, Integer targetId, Message oneToOneMsg);
 	
 	List<Message> getAllMessage(Integer userId);
+
+	List<Integer> getGroupMemberId(Integer groupId);
 }
 

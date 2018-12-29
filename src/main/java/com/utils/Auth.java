@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.pojo.User;
 
@@ -39,7 +41,7 @@ public class Auth {
 			return map.get(username).getId();
 		}
 		return 0;
-	}
+	}	
 	
 	
 }

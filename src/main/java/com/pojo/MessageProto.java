@@ -100,6 +100,7 @@ public final class MessageProto {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
+      @SuppressWarnings("unused")
       int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
@@ -403,7 +404,6 @@ public final class MessageProto {
      * <code>.Message.Type type = 1;</code>
      */
     public com.pojo.MessageProto.Message.Type getType() {
-      @SuppressWarnings("deprecation")
       com.pojo.MessageProto.Message.Type result = com.pojo.MessageProto.Message.Type.valueOf(type_);
       return result == null ? com.pojo.MessageProto.Message.Type.UNRECOGNIZED : result;
     }
@@ -420,7 +420,6 @@ public final class MessageProto {
      * <code>.Message.Target target = 2;</code>
      */
     public com.pojo.MessageProto.Message.Target getTarget() {
-      @SuppressWarnings("deprecation")
       com.pojo.MessageProto.Message.Target result = com.pojo.MessageProto.Message.Target.valueOf(target_);
       return result == null ? com.pojo.MessageProto.Message.Target.UNRECOGNIZED : result;
     }
@@ -604,7 +603,8 @@ public final class MessageProto {
       return result;
     }
 
-    @java.lang.Override
+    @SuppressWarnings("unchecked")
+	@java.lang.Override
     public int hashCode() {
       if (memoizedHashCode != 0) {
         return memoizedHashCode;
@@ -916,7 +916,6 @@ public final class MessageProto {
        * <code>.Message.Type type = 1;</code>
        */
       public com.pojo.MessageProto.Message.Type getType() {
-        @SuppressWarnings("deprecation")
         com.pojo.MessageProto.Message.Type result = com.pojo.MessageProto.Message.Type.valueOf(type_);
         return result == null ? com.pojo.MessageProto.Message.Type.UNRECOGNIZED : result;
       }
@@ -961,7 +960,6 @@ public final class MessageProto {
        * <code>.Message.Target target = 2;</code>
        */
       public com.pojo.MessageProto.Message.Target getTarget() {
-        @SuppressWarnings("deprecation")
         com.pojo.MessageProto.Message.Target result = com.pojo.MessageProto.Message.Target.valueOf(target_);
         return result == null ? com.pojo.MessageProto.Message.Target.UNRECOGNIZED : result;
       }

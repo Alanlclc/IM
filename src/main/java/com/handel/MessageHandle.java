@@ -6,22 +6,16 @@ import java.net.InetSocketAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.websocket.servlet.WebSocketServletAutoConfiguration;
 import org.springframework.stereotype.Component;
 
 import com.dispatcher.Handle;
-import com.pojo.MessageProto;
 import com.pojo.MessageProto.Message;
 import com.pojo.MessageProto.Message.Type;
-import com.service.MessageService;
-import com.service.RedisService;
 
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleStateEvent;
-import io.netty.channel.ChannelHandler.Sharable;
 
 /**
 <code>MessageHandle.java</code>

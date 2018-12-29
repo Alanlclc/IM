@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.config.RedisKey;
 import com.pojo.MessageProto.Message;
-import com.service.MessageService;
 import com.service.RedisService;
 import com.utils.Auth;
 
@@ -58,18 +57,6 @@ public class RedisServiceImpl implements RedisService{
 	}
 
 	@Override
-	public void pushOneToOneMeg(Integer userId, Integer targetId, Message oneToOneMsg) {
-		//判断对方是否在线
-		//在线  直接推给对方    
-		//不在线   在redis存起来
-		if(checkOnline(targetId)) {
-			
-		}else {
-			listOperations.leftPush(RedisKey.SESSION.VALUE, oneToOneMsg);
-		}
-	}
-
-	@Override
 	public void online(Integer userId) {
 		List<Integer> onlineList = (List<Integer>) valueOperations.get(RedisKey.LOGIN.VALUE);
 		if(onlineList != null) {
@@ -98,6 +85,17 @@ public class RedisServiceImpl implements RedisService{
 									.map(e->(Message)e)
 									.collect(Collectors.toList());
 		return collect;
+	}
+
+	@Override
+	public List<Integer> getGroupMemberId(Integer groupId) {
+		
+		
+		
+		
+		
+		
+		return null;
 	}
 
 

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.pojo.MessageProto;
 import com.pojo.MessageProto.Message;
-import com.service.RedisService;
+import com.service.MessageService;
 import com.utils.MessageUtil;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -28,7 +28,7 @@ import io.netty.channel.ChannelHandlerContext;
 public class MessageDispatcher implements Handle {
 	
 	@Autowired
-	private RedisService service;
+	private MessageService messageService;
 	
 	
 	@Override
@@ -38,24 +38,18 @@ public class MessageDispatcher implements Handle {
 
 	@Override
 	public void receiveHandle(ChannelHandlerContext ctx, MessageProto.Message message) {
-		//收到客户端消息
 		Integer userId = message.getId();
-		if(service.checkOnline(userId)) {
-			//检测到不在线直接退出
-			ctx.close();
-		}
 		Integer targetId = message.getTargetId();
 		switch (message.getTargetValue()) {
 		case 0:
 			//一对一消息
 			Message oneToOneMsg = MessageUtil.getOneToOneMsg(userId, targetId, message.getMes());
-			service.pushOneToOneMeg(userId, targetId ,oneToOneMsg);
-			//写入响应流
-//			ctx.writeAndFlush(oneToOneMsg);
+			messageService.pushOneToOneMeg(oneToOneMsg);
 			break;
 		case 1:
 			//群发消息
-			
+			Message msg = MessageUtil.getOneToOneMsg(userId, targetId, message.getMes());
+			messageService.pushOneToManyMsg(msg);
 			break;
 		}
 	}

@@ -29,14 +29,12 @@ import io.netty.channel.ChannelHandlerContext;
 public class LoginDispatcher implements Handle {
 	
 	@Autowired
-	private MessageService executorService;
+	private MessageService messageService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(LoginDispatcher.class);
 	
 	@Override
-	public void sendHandle(ChannelHandlerContext ctx) {
-		
-	}
+	public void sendHandle(ChannelHandlerContext ctx) {}
 
 	@Override
 	public void receiveHandle(ChannelHandlerContext ctx, Message evt) {
@@ -47,7 +45,9 @@ public class LoginDispatcher implements Handle {
 		if(userId>0) {
 			//通过校验
 			logger.info("通过校验");
-			executorService.putChannel(userId, ctx.channel());
+			messageService.putChannel(userId, ctx.channel());
+			//拉取未读消息
+			messageService.pushMessageOutLine(userId);
 		}else {
 			//登陆不通过  直接将登陆的channel关闭
 			logger.info("不通过校验");

@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+
+import com.pojo.MessageProto.Message;
 
 import io.netty.channel.Channel;
 
@@ -33,13 +33,17 @@ public interface MessageService {
 	
 	public void removeChannle(Integer userId,Channel channel);
 	
-	public void sendOneToOneMsg();
+	public void pushOneToOneMeg(Message oneToOneMsg);
 	
-	public void sendOneToManyMsg();
+	public void pushOneToManyMsg(Message message);
 	
 	public Channel getChannelByUserId(Integer userId);
 	
 	public List<Channel> getChannelListByIdList(List<Integer> list);
+	
+	public boolean checkOnline(Integer userId);
+
+	public void pushMessageOutLine(Integer userId);
 	
 }
 
