@@ -48,9 +48,9 @@ public class LoginDispatcher implements Handle {
 			messageService.putChannel(userId, ctx.channel());
 			//拉取未读消息
 			messageService.pushMessageOutLine(userId);
+			logger.info("online : {}",messageService.map.size());
 		}else {
 			//登陆不通过  直接将登陆的channel关闭
-			logger.info("不通过校验");
 			ctx.close();
 		}
 	}

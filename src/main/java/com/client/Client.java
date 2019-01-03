@@ -2,6 +2,10 @@
 package com.client;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +15,7 @@ import com.pojo.MessageProto.Message;
 import com.utils.MessageUtil;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
@@ -42,8 +47,11 @@ import io.netty.handler.logging.LoggingHandler;
 */
 public class Client {
 	
+	private static int i = 0;
 	
 	private static final Logger logger = LoggerFactory.getLogger(Client.class);
+	
+	private static List<Channel> lists = new ArrayList<>(1);
 
 	public static void main(String[] args) throws Exception {
 		EventLoopGroup group = new NioEventLoopGroup();
@@ -75,17 +83,57 @@ public class Client {
 	
 	static class ClientHandle extends SimpleChannelInboundHandler<Message>{
 
+		
 		@Override
-		protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
-			logger.info("receive heartbeat:{}",msg.getType());
+		public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
+			lists.remove(ctx.channel());
 		}
 
 		@Override
-		public void channelActive(ChannelHandlerContext ctx) throws Exception {
-			Message message = MessageUtil.loginMsg(1, "test1", "123456");
-			ctx.writeAndFlush(message);
+		public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+			lists.add(ctx.channel());
+		}
+
+		@Override
+		protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
+			logger.info("receive heartbeat:{}",msg.getType());
+			if(i == 0) {
+				List<Message> list = new ArrayList<>();
+				list.add(MessageUtil.loginMsg(1, "test1", "123456"));
+				list.add(MessageUtil.getOneToOneMsg(1, 2, "hello"));
+				Task task = new Task(lists.get(0), list);
+				Thread thread = new Thread(task);
+				thread.run();
+			}
+			i++;
 		}
 	}
+	
+	
+	static class Task implements Runnable{
+		
+		Channel channel = null;
+		List<Message> list = new ArrayList<>();
+		
+		Task(Channel channel,List<Message> list){
+			this.channel = channel;
+			this.list = list;
+		}
+
+		@SuppressWarnings("static-access")
+		@Override
+		public void run() {
+			for (Message msg : this.list) {
+				try {
+					Thread.currentThread().sleep(10000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}	
+				this.channel.writeAndFlush(msg);
+			}
+		}
+	}
+	
 	
 	
 	

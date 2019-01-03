@@ -30,7 +30,6 @@ import com.utils.Auth;
 */
 
 @Service
-@SuppressWarnings("unchecked")
 public class RedisServiceImpl implements RedisService{
 	
 	@Autowired
@@ -38,68 +37,11 @@ public class RedisServiceImpl implements RedisService{
 	
 	@Autowired
 	private ListOperations<String, Object> listOperations;
-	
-	
-	
-	@Override
-	public Integer checkLogin(String username,String password) {
-		return Auth.loginAuth(username, password);
-	}
 
 	@Override
-	public void cancelOnline(Integer userId) {
-		List<Integer> onlineList = (List<Integer>) valueOperations.get(RedisKey.LOGIN.VALUE);
-		if(onlineList != null && onlineList.contains(userId)) {
-			onlineList.remove(userId);
-			valueOperations.set(RedisKey.LOGIN.VALUE, onlineList);
-		}
-		return;
+	public void addOutlineMes(Message message) {
+		listOperations.leftPush(RedisKey.OUTLINE_MESSAGE.VALUE + message.getTargetId(), message.getMes());
 	}
-
-	@Override
-	public void online(Integer userId) {
-		List<Integer> onlineList = (List<Integer>) valueOperations.get(RedisKey.LOGIN.VALUE);
-		if(onlineList != null) {
-			onlineList.add(userId);
-		}else {
-			onlineList = new ArrayList<>();
-			onlineList.add(userId);
-		}
-		valueOperations.set(RedisKey.LOGIN.VALUE, onlineList);
-	}
-
-	@Override
-	public boolean checkOnline(Integer userId) {
-		List<Integer> onlineList = (List<Integer>) valueOperations.get(RedisKey.LOGIN.VALUE);
-		if(onlineList != null && onlineList.contains(userId)) {
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public List<Message> getAllMessage(Integer userId) {
-		List<Object> list = listOperations.range(RedisKey.SESSION.VALUE, 0, -1);
-		List<Message> collect = list.stream()
-									.filter(e->e instanceof Message)
-									.map(e->(Message)e)
-									.collect(Collectors.toList());
-		return collect;
-	}
-
-	@Override
-	public List<Integer> getGroupMemberId(Integer groupId) {
-		
-		
-		
-		
-		
-		
-		return null;
-	}
-
-
-
 
 }
 

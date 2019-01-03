@@ -15,15 +15,11 @@ package com.config;
 */
 public enum RedisKey {
 
-	/**
-	 *在线列表key
-	 */
-	LOGIN("I:L"),
 	
 	/**
-	 * 
+	 * 离线消息
 	 */
-	SESSION("I:S");
+	OUTLINE_MESSAGE("I:O:");
 	
 	
 	public final String VALUE;

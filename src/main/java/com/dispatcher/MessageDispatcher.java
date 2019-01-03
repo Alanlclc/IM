@@ -1,6 +1,8 @@
 
 package com.dispatcher;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +29,8 @@ import io.netty.channel.ChannelHandlerContext;
 @Component("messageDispatcher")
 public class MessageDispatcher implements Handle {
 	
+	private static Logger logger = LoggerFactory.getLogger(MessageDispatcher.class);
+	
 	@Autowired
 	private MessageService messageService;
 	
@@ -44,6 +48,7 @@ public class MessageDispatcher implements Handle {
 		case 0:
 			//一对一消息
 			Message oneToOneMsg = MessageUtil.getOneToOneMsg(userId, targetId, message.getMes());
+			logger.info("收到一对一消息");
 			messageService.pushOneToOneMeg(oneToOneMsg);
 			break;
 		case 1:

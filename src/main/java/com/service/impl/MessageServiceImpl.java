@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,7 @@ import io.netty.channel.Channel;
 @Service
 public class MessageServiceImpl implements MessageService{
 	
+	private static Logger logger = LoggerFactory.getLogger(MessageServiceImpl.class);
 	
 	@Autowired
 	private RedisService redisService;
@@ -53,23 +56,24 @@ public class MessageServiceImpl implements MessageService{
 			channel.alloc();
 			channel.writeAndFlush(message);
 		}else {
-			
+			logger.info("处理离线消息");
+			redisService.addOutlineMes(message);
 		}
 	}
 
 	@Override
 	public void pushOneToManyMsg(Message message) {
-		Integer groupId = message.getTargetId();
-		List<Integer> groups = redisService.getGroupMemberId(groupId);
-		for (Integer targetId : groups) {
-			if(checkOnline(targetId)) {
-				Channel channel = map.get(targetId);
-				channel.alloc();
-				channel.writeAndFlush(message);
-			}else {
-				
-			}
-		}
+//		Integer groupId = message.getTargetId();
+//		List<Integer> groups = redisService.getGroupMemberId(groupId);
+//		for (Integer targetId : groups) {
+//			if(checkOnline(targetId)) {
+//				Channel channel = map.get(targetId);
+//				channel.alloc();
+//				channel.writeAndFlush(message);
+//			}else {
+//				
+//			}
+//		}
 	}
 
 	@Override
